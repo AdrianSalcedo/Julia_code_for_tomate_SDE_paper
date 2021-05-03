@@ -1,7 +1,8 @@
 using CSV
 using IterableTables, DataFrames, DataTables
 using Distributions
-path = "/home/gabrielsalcedo/Dropbox/Artículos/JuliaPro_code/"
+path =
+    "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/Persistence/"
 include(path * "Compute_fixed_points.jl")
 include(path * "Verify_no_extinction_by_noise.jl")
 include(path * "Verify_R0s_lessthan_R0d_noise_condition.jl")
@@ -63,14 +64,12 @@ function Sampler_persistence_parameters(N_p)
     end
 end
 
-
-
 par, auxiliar_constants_rho_i, auxiliar_constants_a_i,
     auxiliar_constants_c_i, endemic_fixed_point =
         Sampler_persistence_parameters(100)
 
-CSV.write(path * "R0+1//Parameter_Persistence.csv", par)
-CSV.write(path * "R0+1//Constant_rho_i.csv", auxiliar_constants_rho_i)
-CSV.write(path * "R0+1//Constants_a_i.csv", auxiliar_constants_a_i)
-CSV.write(path * "R0+1//Constants_c_i.csv",auxiliar_constants_c_i)
-CSV.write(path * "R0+1//endemic_fixed_point.csv",endemic_fixed_point)
+CSV.write(path * "Parameter_Persistence.csv", par)
+CSV.write(path * "Constant_rho_i.csv", auxiliar_constants_rho_i)
+CSV.write(path * "Constants_a_i.csv", auxiliar_constants_a_i)
+CSV.write(path * "Constants_c_i.csv",auxiliar_constants_c_i)
+CSV.write(path * "endemic_fixed_point.csv",endemic_fixed_point)
