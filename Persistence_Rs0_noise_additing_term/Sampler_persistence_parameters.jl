@@ -1,8 +1,10 @@
 using CSV
 using IterableTables, DataFrames, DataTables
 using Distributions
-path =
-    "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/Persistence/"
+path1 = "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/"
+path2 = "Persistence_Rs0_noise_additing_term/"
+path = path1 * path2
+
 include(path * "Compute_fixed_points.jl")
 include(path * "Verify_no_extinction_by_noise.jl")
 include(path * "Verify_R0s_additin_noise_condition.jl")

@@ -1,12 +1,17 @@
 using CSV
 using IterableTables, DataFrames, DataTables
 using Distributions
-path = "/home/gabrielsalcedo/Dropbox/Artículos/JuliaPro_code/"
+
+path1 = "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/"
+path2 = "Persistence_Rs0greather_than_one_Rd0_less_than_one/"
+path = path1 * path2
+
 include(path * "Compute_fixed_points.jl")
 include(path * "Verify_no_extinction_by_noise.jl")
-include(path * "Case_two/Verify_R0s_greaterthan_R0d_noise_condition.jl")
+include(path * "Verify_R0s_greaterthan_R0d_noise_condition.jl")
 include(path * "Compute_stochastic_R0.jl")
-include(path * "Case_two/Verify_rd_lessthan_one.jl")
+include(path * "Compute_deterministic_R0.jl")
+include(path * "Verify_rd_lessthan_one.jl")
 include(path * "Verify_rs_persistence_condition.jl")
 include(path * "Compute_auxiliar_constants_ci.jl")
 include(path * "Compute_auxiliar_constants_rho_i.jl")
@@ -65,14 +70,12 @@ function Sampler_persistence_parameters(N_p)
     end
 end
 
-
-
 par, auxiliar_constants_rho_i, auxiliar_constants_a_i,
     auxiliar_constants_c_i, endemic_fixed_point =
         Sampler_persistence_parameters(100)
 
-CSV.write(path * "Case_two//Parameter_Persistence_case_two.csv", par)
-CSV.write(path * "Case_two//Constant_rho_i_case_two.csv", auxiliar_constants_rho_i)
-CSV.write(path * "Case_two//Constants_a_i_case_two.csv", auxiliar_constants_a_i)
-CSV.write(path * "Case_two//Constants_c_i_case_two.csv",auxiliar_constants_c_i)
-CSV.write(path * "Case_two//endemic_fixed_point_case_two.csv",endemic_fixed_point)
+CSV.write(path * "Parameter_Persistence_case_one.csv", par)
+CSV.write(path * "Constant_rho_i_case_one.csv", auxiliar_constants_rho_i)
+CSV.write(path * "Constants_a_i_case_one.csv", auxiliar_constants_a_i)
+CSV.write(path * "Constants_c_i_case_one.csv",auxiliar_constants_c_i)
+CSV.write(path * "endemic_fixed_point_case_one.csv",endemic_fixed_point)
