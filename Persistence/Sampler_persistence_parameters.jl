@@ -33,8 +33,8 @@ function Sampler_persistence_parameters(N_p)
         sigma_L = rand(Uniform(0,1))
         sigma_I = epsilon*sigma_L
         N_p = N_p
-        N_v = mu/gamma
-
+        N_v = mu / gamma
+        N_v = N_v / N_v
         par = DataFrame(beta_p = beta_p, r_1 = r_1, b = b, r_2 = r_2,
          beta_v = beta_v, theta = theta, mu = mu, gamma = gamma,
           sigma_L = sigma_L, sigma_I = sigma_I, sigma_v = sigma_v, N_v = N_v,
@@ -66,10 +66,10 @@ end
 
 par, auxiliar_constants_rho_i, auxiliar_constants_a_i,
     auxiliar_constants_c_i, endemic_fixed_point =
-        Sampler_persistence_parameters(100)
+        Sampler_persistence_parameters(1)
 
-CSV.write(path * "Parameter_Persistence.csv", par)
-CSV.write(path * "Constant_rho_i.csv", auxiliar_constants_rho_i)
-CSV.write(path * "Constants_a_i.csv", auxiliar_constants_a_i)
-CSV.write(path * "Constants_c_i.csv",auxiliar_constants_c_i)
-CSV.write(path * "endemic_fixed_point.csv",endemic_fixed_point)
+CSV.write(path * "Parameter_Persistence_1.csv", par)
+CSV.write(path * "Constant_rho_i_1.csv", auxiliar_constants_rho_i)
+CSV.write(path * "Constants_a_i_1.csv", auxiliar_constants_a_i)
+CSV.write(path * "Constants_c_i_1.csv",auxiliar_constants_c_i)
+CSV.write(path * "endemic_fixed_point_1.csv",endemic_fixed_point)

@@ -36,6 +36,7 @@ function Sampler_persistence_parameters(N_p)
         sigma_I = epsilon*sigma_L
         N_p = N_p
         N_v = mu/gamma
+        N_v = N_v / N_v
 
         par = DataFrame(beta_p = beta_p, r_1 = r_1, b = b, r_2 = r_2,
          beta_v = beta_v, theta = theta, mu = mu, gamma = gamma,
@@ -68,7 +69,7 @@ end
 
 par, auxiliar_constants_rho_i, auxiliar_constants_a_i,
     auxiliar_constants_c_i, endemic_fixed_point =
-        Sampler_persistence_parameters(100)
+        Sampler_persistence_parameters(1)
 
 CSV.write(path * "Parameter_Persistence.csv", par)
 CSV.write(path * "Constant_rho_i.csv", auxiliar_constants_rho_i)

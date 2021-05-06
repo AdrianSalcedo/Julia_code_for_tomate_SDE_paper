@@ -5,8 +5,12 @@ using CSV
 using IterableTables, DataFrames, DataTables
 using StochasticDiffEq
 using Distributions
-path = "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/Persistence/"
-Parameters = CSV.read(path * "Parameter_Persistence.csv", DataFrame)
+
+path =
+    "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/Persistence/"
+include(path * "Dynamics.jl")
+
+Parameters = CSV.read(path * "Parameter_Persistence_1.csv", DataFrame)
 
 beta_p = Parameters.beta_p[1]
 r_1 =  Parameters.r_1[1]
@@ -21,60 +25,23 @@ sigma_L =  Parameters.sigma_L[1]
 sigma_I =  Parameters.sigma_I[1]
 sigma_v = Parameters.sigma_v[1]
 
-u_0 = [100.0,0.0,0.0,3.0,4.0]
-T = 500.0
-time = (0.0,T)
-N_p = u_0[1]+u_0[2]+u_0[3]
-dt=0.01
-t_s=range(0.0,T, step=1.0)
+u_0 = [ 1.0, 0.0, 0.0, 0.03 , 0.04]
+T = 200.0
+time = (0.0, T)
+N_p = u_0[1] + u_0[2] + u_0[3]
+dt = 0.01
+t_s = range( 0.0, T, step = 1.0)
 
-
-R0 = (beta_p*beta_v*b)/(gamma*(b+r_1)*r_2)
-Rs0 = R0 -(1/2)*((sigma_L+sigma_I)^2-sigma_v^2/(beta_v+sigma_v^2+theta*gamma))
-################################################################################
-
-function F_Det(du,u,p,t)
- @inbounds begin
-        du[1] = -beta_p*u[1]*u[5]/N_v+r_1*u[2]+r_2*u[3]
-        du[2] = beta_p*u[1]*u[5]/N_v-(b+r_1)*u[2]
-        du[3] = b*u[2]-r_2*u[3]
-        du[4] = -beta_v*u[4]*u[3]/N_p-gamma*u[4]+(1-theta)*mu
-        du[5] = beta_v*u[4]*u[3]/N_p-gamma*u[5]+theta*mu
-    end
-    nothing
-end
-
-function F_Drift(du,u,p,t)
-     @inbounds begin
-        du[1] = -beta_p*u[1]*u[5]/N_v+r_1*u[2]+r_2*u[3]
-        du[2] = beta_p*u[1]*u[5]/N_v-(b+r_1)*u[2]
-        du[3] = b*u[2]-r_2*u[3]
-        du[4] = -beta_v*u[4]*u[3]/N_p-gamma*u[4]+(1-theta)*mu
-        du[5] = beta_v*u[4]*u[3]/N_p-gamma*u[5]+theta*mu
-    end
-    nothing
-
-end
-
-function G_Diffusion(du,u,p,t)
-    @inbounds begin
-        du[1,1] = u[1]*(sigma_L*u[2]+sigma_I*u[3])/N_p
-        du[1,2] = 0
-        du[2,1] = -sigma_L*u[1]*u[2]/N_p
-        du[2,2] = 0
-        du[3,1] = -sigma_I*u[1]*u[3]/N_p
-        du[3,2] = 0
-        du[4,1] = 0
-        du[4,2] = -sigma_v*u[4]
-        du[5,1] = 0
-        du[5,2] = -sigma_v*u[5]
-    end
-    nothing
-end
+R0 = (beta_p * beta_v * b) / (gamma * (b + r_1) * r_2)
+Rs0 = R0 -
+    (1 / 2) * (
+        (sigma_L + sigma_I) ^ 2 -
+            sigma_v ^ 2 / (beta_v + sigma_v ^ 2 + theta * gamma)
+        )
 
 ################################################################################
 ######################### Solution computation #################################
-########################## Deterministic SolutionPage 241 of The Threshold Behaviour of Epidemic Models ##############################
+########################## Deterministic Solution ##############################
 
 prob_det = ODEProblem(F_Det,u_0,time)
 det_sol = solve(prob_det)
