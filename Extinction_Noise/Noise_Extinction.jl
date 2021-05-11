@@ -24,7 +24,7 @@ sigma_I = 0.7
 sigma_v = 0.86
 N_v = mu/gamma
 
-u_0 = [100.0,0.0,0.0,3.0,3.0]
+u_0 = [1.0,0.0,0.0,3.0,3.0]
 T = 100.0
 time = (0.0,T)
 N_p = u_0[1]+u_0[2]+u_0[3]
@@ -114,6 +114,7 @@ plot(p1,p2,p3,p4,p5,title,layout = @layout([[A B C]; [D E F]]),label = "")
 ################################################################################
 ######################    data  Det Solution    ################################
 ################################################################################
+
 det_Time = det_sol.t
 det_xu = det_sol.u
 det_xu_glued = hcat(det_xu...)
@@ -147,11 +148,6 @@ CSV.write(path * "Stc_solution_noise_extinction.csv",stc_DF1_red)
 ########################## Monte  Carlo Ensamble ###############################
 ################################################################################
 
-
-
-################################################################################
-########################## Monte  Carlo Ensamble ###############################
-################################################################################
 Datos=DataFrame()
 j = 0
 i = 1
@@ -174,8 +170,8 @@ while j <= 10000
     #condition2 = condition1-N_p*ones(size(condition1))
     #condition3 = maximum(abs.(condition2))
     #condition4 = condition3<=tol
-    condition5 = maximum(abs.(variables[end-100:end,3]))
-    condition6 = condition5<0.7/N_p
+    condition5 = maximum(abs.(variables[end-25:end,3]))
+    condition6 = condition5<0.07
     if (condition6 == true)
         Datos = append!(Datos, Datos_aux) #append the data in the loop
         j+=1
@@ -184,5 +180,5 @@ while j <= 10000
     println(i)
     i+=1
 end
+
 CSV.write(path * "Data_noise_may_10.csv",Datos)
-#CSV.write("D://Data_new_4.csv",Datos)
