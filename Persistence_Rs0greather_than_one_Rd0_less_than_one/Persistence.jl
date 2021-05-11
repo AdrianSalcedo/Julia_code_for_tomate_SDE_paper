@@ -11,6 +11,20 @@ path2 = "Persistence_Rs0greather_than_one_Rd0_less_than_one/"
 path = path1 * path2
 
 Parameters = CSV.read(path * "Parameter_Persistence_case_one.csv", DataFrame)
+#=
+beta_p = Parameters.beta_p[1]
+r_1 =  Parameters.r_1[1]
+r_2 =  Parameters.r_2[1]
+b =  Parameters.b[1]
+beta_v =  Parameters.beta_v[1]
+theta =  Parameters.theta[1]
+mu =  Parameters.mu[1]
+gamma =  Parameters.gamma[1]
+N_v =  Parameters.N_v[1]
+sigma_L =  Parameters.sigma_L[1]
+sigma_I =  Parameters.sigma_I[1]
+sigma_v = Parameters.sigma_v[1]
+=#
 
 beta_p = Parameters.beta_p[1]
 r_1 =  Parameters.r_1[1]
@@ -24,6 +38,9 @@ N_v =  Parameters.N_v[1]
 sigma_L =  Parameters.sigma_L[1]
 sigma_I =  Parameters.sigma_I[1]
 sigma_v = Parameters.sigma_v[1]
+
+
+
 
 u_0 = [100.0, 0.0, 0.0, 3.0, 4.0]
 T = 1000.0

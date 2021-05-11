@@ -2,43 +2,53 @@ using DifferentialEquations
 using Plots; plotly()
 using DifferentialEquations.EnsembleAnalysis
 using CSV
-using IterableTables, DataFrames, DataTables
+using DataFrames
 using StochasticDiffEq
-using Distributions
-path1 = "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/"
-path2 = "Persistence_Rs0_noise_additing_term/"
+
+path1 = "/home/gabrielsalcedo/Github/"
+path2 = "Julia_code_for_tomate_SDE_paper/Extinction_Noise/"
 path = path1 * path2
-Parameters = CSV.read(path * "Parameter_Persistence.csv", DataFrame)
 
-beta_p = Parameters.beta_p[1]
-r_1 =  Parameters.r_1[1]
-r_2 =  Parameters.r_2[1]
-b =  Parameters.b[1]
-beta_v =  Parameters.beta_v[1]
-theta =  Parameters.theta[1]
-mu =  Parameters.mu[1]
-gamma =  Parameters.gamma[1]
-N_v =  Parameters.N_v[1]
-sigma_L =  Parameters.sigma_L[1]
-sigma_I =  Parameters.sigma_I[1]
-sigma_v = Parameters.sigma_v[1]
+#include(path * "Dynamics.jl")
 
-u_0 = [100.0,0.0,0.0,3.0,4.0]
-T = 500.0
+beta_p = 0.06
+r_1 = 0.9
+r_2 = 0.005
+b = 0.9
+beta_v = 0.1
+theta = 0.0
+mu = 0.3
+gamma = 0.5
+sigma_L = 0.3
+sigma_I = 0.3
+sigma_v = 0.3
+N_v = mu/gamma
+
+u_0 = [100.0,0.0,0.0,3.0,3.0]
+T = 1000.0
 time = (0.0,T)
-N_p = u_0[1] + u_0[2] + u_0[3]
-dt = 0.01
-t_s = range(0.0,T, step = 1.0)
+N_p = u_0[1]+u_0[2]+u_0[3]
+dt=0.01
 
-R0 = (beta_p * beta_v * b) / (gamma * (b + r_1) * r_2)
-Rs0 = R0 - (1 / 2) * ((sigma_L + sigma_I) ^ 2 - sigma_v ^ 2 /
-    (beta_v + sigma_v ^ 2 + theta * gamma))
+tol = 1e-06
+
 ################################################################################
+
+cond_1 = beta_p^2/(2*sigma_L^2)+ r_2^2/(2*sigma_I^2)+2*beta_p-r_1
+cond_2 = beta_v^2/(2*sigma_v^2)+beta_v-gamma+theta*mu
+#Rs0 = beta_p*beta_v/(r*gamma)
+R0 = sqrt((beta_p*beta_v*b)/(gamma*(b+r_1)*r_2))
+
+println("cond_1=",cond_1);
+
+println("cond_2=",cond_2);
+
+println("R0=",R0);
 
 function F_Det(du,u,p,t)
  @inbounds begin
         du[1] = -beta_p*u[1]*u[5]/N_v+r_1*u[2]+r_2*u[3]
-        du[2] = beta_p*u[1]*u[5]/N_v-(b+r_1)*u[2]
+        du[2] = beta_p*u[1]*u[5]/N_v-b*u[2]-r_1*u[2]
         du[3] = b*u[2]-r_2*u[3]
         du[4] = -beta_v*u[4]*u[3]/N_p-gamma*u[4]+(1-theta)*mu
         du[5] = beta_v*u[4]*u[3]/N_p-gamma*u[5]+theta*mu
@@ -49,7 +59,7 @@ end
 function F_Drift(du,u,p,t)
      @inbounds begin
         du[1] = -beta_p*u[1]*u[5]/N_v+r_1*u[2]+r_2*u[3]
-        du[2] = beta_p*u[1]*u[5]/N_v-(b+r_1)*u[2]
+        du[2] = beta_p*u[1]*u[5]/N_v-b*u[2]-r_1*u[2]
         du[3] = b*u[2]-r_2*u[3]
         du[4] = -beta_v*u[4]*u[3]/N_p-gamma*u[4]+(1-theta)*mu
         du[5] = beta_v*u[4]*u[3]/N_p-gamma*u[5]+theta*mu
@@ -60,7 +70,7 @@ end
 
 function G_Diffusion(du,u,p,t)
     @inbounds begin
-        du[1,1] = u[1]*(sigma_L*u[2]+sigma_I*u[3])/N_p
+        du[1,1] = (sigma_L*u[2]*u[1]+sigma_I*u[1]*u[3])/N_p
         du[1,2] = 0
         du[2,1] = -sigma_L*u[1]*u[2]/N_p
         du[2,2] = 0
@@ -74,10 +84,7 @@ function G_Diffusion(du,u,p,t)
     nothing
 end
 
-################################################################################
 ######################### Solution computation #################################
-################################################################################
-
 ########################## Deterministic Solution ##############################
 
 prob_det = ODEProblem(F_Det,u_0,time)
@@ -85,13 +92,12 @@ det_sol = solve(prob_det)
 ########################## Stochastis Solution #################################
 prob_sde_tomato_sys = SDEProblem(F_Drift,G_Diffusion,u_0,time,
 noise_rate_prototype=zeros(5,2))
-sol = solve(prob_sde_tomato_sys,EM(),dt= dt)
+sol = solve(prob_sde_tomato_sys,SROCKC2(),dt= dt)
 ################################################################################
 ############################ PLot variables ####################################
 ################################################################################
 
-title = plot(title = "R_s =$Rs0", grid = false, showaxis =
-    false, bottom_margin = -50Plots.px)
+title = plot(title = "Noise Condition", grid = false, showaxis = false, bottom_margin = -50Plots.px)
 p1=plot(det_sol,vars=(1),color="blue")
 p1=plot!(sol,vars=(1),color="darkgreen",title="Susc. p.")
 p2=plot(det_sol,vars=(2),color="blue")
@@ -110,19 +116,35 @@ plot(p1,p2,p3,p4,p5,title,layout = @layout([[A B C]; [D E F]]),label = "")
 ################################################################################
 Datos=DataFrame()
 j = 0
+i = 1
 trajectories = 1
+t_s = range(0.0,T, step=1.0)
 while j <= 10000
+    #ensembleprob = EnsembleProblem(prob_sde_tomato_sys)
+    #sim = solve(ensembleprob, SROCK1(), dt = dt, abstol=1e-06,dtmin =0.0001,trajectories=trajectories)
     monte_prob = MonteCarloProblem(prob_sde_tomato_sys)
     sim = solve(monte_prob, SROCKC2(),dt= dt,EnsembleThreads(),trajectories=trajectories)
+    #plot(sim,idxs=(3))
     component = componentwise_vectors_timepoint(sim,t_s) #gives all solution in time vector t_s
     component = transpose(component) #transpose to obtain any*5 data matrix
     component = vcat(component...) #to obtain shape for dataframe
     component = vcat(component...) # again do a reshape
     variables = DataFrame(component) # define first data frame
-    Datos_aux = DataFrame(t = t_s, S_p = variables[:,1], I_p = variables[:,3], I_v = variables[:,5]) #only some variables
-    Datos = append!(Datos, Datos_aux) #append the data in the loop
-    j+=1
-    println("acepted =",j)
+    Datos_aux = DataFrame(t = t_s, S_p = variables[:,1]/N_p,
+        I_p = variables[:,3]/N_p, I_v = variables[:,5]) #only some variables
+    #condition1 =  variables[:,1]+variables[:,2]+variables[:,3]
+    #condition2 = condition1-N_p*ones(size(condition1))
+    #condition3 = maximum(abs.(condition2))
+    #condition4 = condition3<=tol
+    condition5 = maximum(abs.(variables[end-100:end,3]))
+    condition6 = condition5<0.7
+    #if (condition6 == true)
+        Datos = append!(Datos, Datos_aux) #append the data in the loop
+        j+=1
+        println("acepted =",j)
+    #end
+    println(i)
+    i+=1
 end
-#CSV.write("/home/gabrielsalcedo/Dropbox/Artículos/JuliaPro_code/Noise_Extinction/Trajectories//Data_new.csv",Datos)
-#CSV.write("D://Data_Persistence.csv",Datos)
+CSV.write(path * "Data_noise_may_10.csv",Datos)
+#CSV.write("D://Data_new_4.csv",Datos)

@@ -38,17 +38,18 @@ function Sampler_persistence_parameters(N_p)
         sigma_L = rand(Uniform(0,1))
         sigma_I = epsilon*sigma_L
         N_p = N_p
-        N_v = mu/gamma
+        N_v = mu / gamma
+        N_v = N_v / N_v
 
         par = DataFrame(beta_p = beta_p, r_1 = r_1, b = b, r_2 = r_2,
          beta_v = beta_v, theta = theta, mu = mu, gamma = gamma,
           sigma_L = sigma_L, sigma_I = sigma_I, sigma_v = sigma_v, N_v = N_v,
-           N_p = N_p, epsilon = epsilon)
+           N_p = N_p), epsilon = epsilon)
 
         par = DataFrame(beta_p = beta_p, r_1 = r_1, b = b, r_2 = r_2,
          beta_v = beta_v, theta = theta, mu = mu, gamma = gamma,
           sigma_L = sigma_L, sigma_I = sigma_I, sigma_v = sigma_v, N_v = N_v,
-           N_p = N_p, epsilon = epsilon)
+           N_p = N_p), epsilon = epsilon)
         cond0 = Verify_no_extinction_by_noise(par)
         cond1 = Verify_rd_lessthan_one(par)
         endemic_fixed_point = Compute_fixed_points(par)
@@ -71,7 +72,7 @@ end
 
 par, auxiliar_constants_rho_i, auxiliar_constants_a_i,
     auxiliar_constants_c_i, endemic_fixed_point =
-        Sampler_persistence_parameters(100)
+        Sampler_persistence_parameters(1)
 
 CSV.write(path * "Parameter_Persistence_case_one.csv", par)
 CSV.write(path * "Constant_rho_i_case_one.csv", auxiliar_constants_rho_i)

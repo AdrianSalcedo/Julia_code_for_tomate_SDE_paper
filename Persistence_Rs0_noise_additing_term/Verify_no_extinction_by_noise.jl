@@ -17,10 +17,11 @@ function Verify_no_extinction_by_noise(par)
     sigma_v = par.sigma_v[1]
 
     cond_1 = sigma_I ^ 2 -
-        (r_2 ^ 2 * sigma_L ^ 2) / (2 * (r_1 - beta_p) - beta_p ^ 2)
-    cond_2 = sigma_v ^ 2 - beta_v ^ 2 /(2 * (gamma - theta * mu - beta_v))
+        (sigma_L ^ 2 * r_2 ^ 2) /
+        (2 * sigma_L ^ 2* r_1 - 4 * beta_p * sigma_L ^ 2 - beta_p ^ 2)
+    cond_2 = sigma_v ^ 2 - beta_v ^ 2 / (2 * (gamma - theta * mu - beta_v))
     test1 = sign(cond_1) == 1.0
-    test2 = sign(cond_2) == -1.0
+    test2 = sign(cond_2) == 1.0
     ans = test1 && test2
 
     return ans

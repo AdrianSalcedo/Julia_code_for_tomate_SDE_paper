@@ -1,6 +1,7 @@
 using CSV
 using IterableTables, DataFrames, DataTables
 using Distributions
+
 path1 = "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/"
 path2 = "Persistence_Rs0_noise_additing_term/"
 path = path1 * path2
@@ -71,8 +72,8 @@ par, auxiliar_constants_rho_i, auxiliar_constants_a_i,
     auxiliar_constants_c_i, endemic_fixed_point =
         Sampler_persistence_parameters(1)
 
-CSV.write(path * "Parameter_Persistence.csv", par)
-CSV.write(path * "Constant_rho_i.csv", auxiliar_constants_rho_i)
-CSV.write(path * "Constants_a_i.csv", auxiliar_constants_a_i)
-CSV.write(path * "Constants_c_i.csv",auxiliar_constants_c_i)
-CSV.write(path * "endemic_fixed_point.csv",endemic_fixed_point)
+CSV.write(path * "Parameter_Persistence_1.csv", par)
+CSV.write(path * "Constant_rho_i_1.csv", auxiliar_constants_rho_i)
+CSV.write(path * "Constants_a_i_1.csv", auxiliar_constants_a_i)
+CSV.write(path * "Constants_c_i_!.csv",auxiliar_constants_c_i)
+CSV.write(path * "endemic_fixed_point_1.csv",endemic_fixed_point)
