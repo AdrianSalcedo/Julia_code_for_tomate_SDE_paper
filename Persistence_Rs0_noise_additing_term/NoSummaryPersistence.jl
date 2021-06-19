@@ -26,7 +26,7 @@ sigma_I =  Parameters.sigma_I[1]
 sigma_v = Parameters.sigma_v[1]
 
 u_0 = [1.0,0.0,0.0,0.03,0.04]
-T = 100.0
+T = 500.0
 time = (0.0,T)
 N_p = u_0[1] + u_0[2] + u_0[3]
 dt = 0.01
@@ -135,5 +135,5 @@ Yu5 = det_yu_glued[5:5:end]
 
 
 stc_DF1 = DataFrame(t = stc_Time, S_p = Yu1, L_p = Yu2, I_p = Yu3, S_v = Yu4, I_v = Yu5)
-stc_DF1_red = stc_DF1[1:10:end,1:end]
+stc_DF1_red = stc_DF1[1:15:end,1:end]
 CSV.write(path * "Stc_solution_persistence_noise_additing.csv",stc_DF1_red)

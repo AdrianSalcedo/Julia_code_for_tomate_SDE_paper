@@ -1,4 +1,4 @@
-function Verify_rs_persistence_condition(par)
+function Verify_r0_grather_one_condition(par)
     # Input:
     #   par: vector with parameters
     # Output:
@@ -10,11 +10,8 @@ function Verify_rs_persistence_condition(par)
     beta_v = par.beta_v[1]
     gamma = par.gamma[1]
     theta = par.theta[1]
-    sigma_L = par.sigma_L[1]
-    sigma_I = par.sigma_I[1]
-    sigma_v = par.sigma_v[1]
 
-    Rs0 = Compute_stochastic_R0(par)
-    test = Rs0 > 1.3
+    R0 = Compute_deterministic_R0(par)
+    test = R0 > 1
     return test
 end

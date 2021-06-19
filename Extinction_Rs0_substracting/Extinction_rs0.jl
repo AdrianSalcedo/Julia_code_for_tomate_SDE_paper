@@ -6,11 +6,14 @@ using IterableTables, DataFrames, DataTables
 using StochasticDiffEq
 using Distributions
 
-path =
-    "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/Persistence/"
+path1 =
+    "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/"
+path2 = "Extinction_Rs0_substracting/"
+
+path = path1 * path2
 include(path * "Dynamics.jl")
 
-Parameters = CSV.read(path * "Parameter_Persistence_2.csv", DataFrame)
+Parameters = CSV.read(path * "Parameter_Extinction_rs0_substracting.csv", DataFrame)
 
 beta_p = Parameters.beta_p[1]
 r_1 =  Parameters.r_1[1]
@@ -25,8 +28,8 @@ sigma_L =  Parameters.sigma_L[1]
 sigma_I =  Parameters.sigma_I[1]
 sigma_v = Parameters.sigma_v[1]
 
-u_0 = [ 1.0, 0.0, 0.0, 0.03 , 0.04]
-T = 500.0
+u_0 = [ 1.0, 0.0, 0.0, 0.03, 0.01]
+    T = 1000.0
 time = (0.0, T)
 N_p = u_0[1] + u_0[2] + u_0[3]
 dt = 0.01
@@ -44,11 +47,11 @@ Rs0 = R0 -
 ########################## Deterministic Solution ##############################
 
 prob_det = ODEProblem(F_Det,u_0,time)
-det_sol = solve(prob_det)
+det_sol = solve(prob_det,Tsit5(),dt = dt)
 ########################## Stochastis Solution #################################
 prob_sde_tomato_sys = SDEProblem(F_Drift,G_Diffusion,u_0,time,
 noise_rate_prototype=zeros(5,2))
-sol = solve(prob_sde_tomato_sys,EM(),dt= dt)
+sol = solve(prob_sde_tomato_sys,SROCKC2(),dt= dt)
 ################################################################################
 ############################ PLot variables ####################################
 ################################################################################
@@ -86,4 +89,5 @@ while j <= 10000
     j+=1
     println("acepted =",j)
 end
-CSV.write(path * "Data_new.csv",Datos)
+#CSV.write("/home/gabrielsalcedo/Dropbox/Artículos/JuliaPro_code/Noise_Extinction/Trajectories//Data_new.csv",Datos)
+#CSV.write("D://Data_Persistence.csv",Datos)

@@ -39,40 +39,37 @@ function Sampler_persistence_parameters(N_p)
         sigma_I = epsilon*sigma_L
         N_p = N_p
         N_v = mu / gamma
-        N_v = N_v / N_v
+        #N_v = N_v / N_v
 
         par = DataFrame(beta_p = beta_p, r_1 = r_1, b = b, r_2 = r_2,
          beta_v = beta_v, theta = theta, mu = mu, gamma = gamma,
           sigma_L = sigma_L, sigma_I = sigma_I, sigma_v = sigma_v, N_v = N_v,
-           N_p = N_p), epsilon = epsilon)
+           N_p = N_p, epsilon = epsilon)
 
-        par = DataFrame(beta_p = beta_p, r_1 = r_1, b = b, r_2 = r_2,
-         beta_v = beta_v, theta = theta, mu = mu, gamma = gamma,
-          sigma_L = sigma_L, sigma_I = sigma_I, sigma_v = sigma_v, N_v = N_v,
-           N_p = N_p), epsilon = epsilon)
         cond0 = Verify_no_extinction_by_noise(par)
         cond1 = Verify_rd_lessthan_one(par)
-        endemic_fixed_point = Compute_fixed_points(par)
+        #endemic_fixed_point = Compute_fixed_points(par)
         cond2 = Verify_R0s_greaterthan_R0d_noise_condition(par)
         cond3 = Verify_rs_persistence_condition(par)
-            auxiliar_constants_c_i =
-                Compute_auxiliar_constants_ci(par,endemic_fixed_point)
-        auxiliar_constants_rho_i = Compute_auxiliar_constants_rho_i(par)
-        cond4, auxiliar_constants_a_i = Verify_persistence_assumption2(
-                auxiliar_constants_c_i,auxiliar_constants_rho_i,par,
-                endemic_fixed_point
-                )
-        Test1 = cond0 && cond1 && cond2 && cond3 && cond4
+        #    auxiliar_constants_c_i =
+        #        Compute_auxiliar_constants_ci(par,endemic_fixed_point)
+        #auxiliar_constants_rho_i = Compute_auxiliar_constants_rho_i(par)
+        #cond4, auxiliar_constants_a_i = Verify_persistence_assumption2(
+        #        auxiliar_constants_c_i,auxiliar_constants_rho_i,par,
+        #        endemic_fixed_point
+        #        )
+        Test1 = cond0 && cond1 && cond2 && cond3 #&& cond4
         if Test1 == true
-            return par, auxiliar_constants_rho_i, auxiliar_constants_a_i,
-            auxiliar_constants_c_i, endemic_fixed_point
+            return par#, auxiliar_constants_rho_i, auxiliar_constants_a_i,
+            #auxiliar_constants_c_i, endemic_fixed_point
         end
     end
 end
 
-par, auxiliar_constants_rho_i, auxiliar_constants_a_i,
-    auxiliar_constants_c_i, endemic_fixed_point =
-        Sampler_persistence_parameters(1)
+    par = Sampler_persistence_parameters(100)
+#, auxiliar_constants_rho_i, auxiliar_constants_a_i,
+#    auxiliar_constants_c_i, endemic_fixed_point =
+        #Sampler_persistence_parameters(100)
 
 CSV.write(path * "Parameter_Persistence_case_one.csv", par)
 CSV.write(path * "Constant_rho_i_case_one.csv", auxiliar_constants_rho_i)

@@ -1,4 +1,4 @@
-function Verify_rs_persistence_condition(par)
+function Verify_rs_extinction_condition(par)
     # Input:
     #   par: vector with parameters
     # Output:
@@ -15,6 +15,6 @@ function Verify_rs_persistence_condition(par)
     sigma_v = par.sigma_v[1]
 
     Rs0 = Compute_stochastic_R0(par)
-    test = Rs0 > 1.3
+    test = Rs0 < 0.7
     return test
 end

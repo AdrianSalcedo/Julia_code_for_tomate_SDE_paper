@@ -27,7 +27,7 @@ sigma_I =  Parameters.sigma_I[1]
 sigma_v = Parameters.sigma_v[1]
 
 u_0 = [1.0,0.0,0.0,0.03,0.04]
-T = 200.0
+T = 500.0
 time = (0.0,T)
 N_p = u_0[1] + u_0[2] + u_0[3]
 dt = 0.01

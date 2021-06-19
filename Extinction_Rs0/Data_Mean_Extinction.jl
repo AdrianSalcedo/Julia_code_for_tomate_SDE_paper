@@ -3,11 +3,11 @@ using CSV
 using IterableTables, DataFrames, DataTables
 using Statistics
 
-path1 = "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/"
-path2 = "Persistence_Rs0_noise_additing_term/"
+path1 = "/home/gabrielsalcedo/Github/"
+path2 = "Julia_code_for_tomate_SDE_paper/Extinction_Rs0/"
 path = path1 * path2
+Data = CSV.read(path * "Data_Rs0_3.csv", DataFrame)
 
-Data = CSV.read(path * "Data_noise_additing.csv", DataFrame)
 
 Data_Mean = DataFrame()
 
@@ -44,4 +44,4 @@ for i in 0:500
     Data_Mean = append!(Data_Mean,Data_aux)
 end
 
-CSV.write(path * "Data_mean_noise_additing.csv",Data_Mean)
+CSV.write(path * "Data_Mean_Extinction_rs_3.csv",Data_Mean)

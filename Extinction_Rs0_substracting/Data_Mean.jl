@@ -3,11 +3,12 @@ using CSV
 using IterableTables, DataFrames, DataTables
 using Statistics
 
-path1 = "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper/"
-path2 = "Persistence_Rs0_noise_additing_term/"
+path1 = "/home/gabrielsalcedo/Github/Julia_code_for_tomate_SDE_paper"
+path2 = "/Extinction_Rs0_substracting/"
+
 path = path1 * path2
 
-Data = CSV.read(path * "Data_noise_additing.csv", DataFrame)
+Data = CSV.read(path * "Data_for_mean.csv", DataFrame)
 
 Data_Mean = DataFrame()
 
@@ -17,8 +18,8 @@ for i in 0:500
     Mean_S_p = mean(Sub.S_p)
     Mean_I_p = mean(Sub.I_p)
     Mean_I_v = mean(Sub.I_v)
-    Quartile_S_p = quantile!(Sub.S_p, [0.05, 0.25, 0.50, 0.75, 0.95])
     Quartile_I_p = quantile!(Sub.I_p, [0.05, 0.25, 0.50, 0.75, 0.95])
+    Quartile_S_p = quantile!(Sub.S_p, [0.05, 0.25, 0.50, 0.75, 0.95])
     Quartile_I_v = quantile!(Sub.I_v, [0.05, 0.25, 0.50, 0.75, 0.95])
     Data_aux = DataFrame(
     t = Mean_t,
@@ -43,5 +44,4 @@ for i in 0:500
       )
     Data_Mean = append!(Data_Mean,Data_aux)
 end
-
-CSV.write(path * "Data_mean_noise_additing.csv",Data_Mean)
+CSV.write(path * "Data_Mean.csv",Data_Mean)

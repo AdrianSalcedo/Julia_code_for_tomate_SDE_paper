@@ -6,7 +6,7 @@ function Verify_rd_lessthan_one(par)
 
    Rd0 = Compute_deterministic_R0(par)
 
-   cond = Rd0-0.9
+   cond = Rd0 - 0.7
    test = sign(cond) == -1.0
    return test
 end

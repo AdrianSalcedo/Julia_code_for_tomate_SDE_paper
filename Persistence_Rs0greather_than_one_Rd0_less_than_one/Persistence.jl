@@ -43,10 +43,10 @@ sigma_v = Parameters.sigma_v[1]
 
 
 u_0 = [100.0, 0.0, 0.0, 3.0, 4.0]
-T = 1000.0
+T = 500.0
 time = (0.0, T)
 N_p = u_0[1] + u_0[2] + u_0[3]
-dt = 0.01
+dt = 0.001
 t_s = range(0.0, T, step = 1.0)
 
 
@@ -99,11 +99,11 @@ end
 ########################## Deterministic SolutionPage 241 of The Threshold Behaviour of Epidemic Models ##############################
 
 prob_det = ODEProblem(F_Det,u_0,time)
-det_sol = solve(prob_det)
+det_sol = solve(prob_det,Tsit5(), dt= 0.0001)
 ########################## Stochastis Solution #################################
 prob_sde_tomato_sys = SDEProblem(F_Drift,G_Diffusion,u_0,time,
     noise_rate_prototype = zeros(5,2))
-sol = solve(prob_sde_tomato_sys,EM(),dt = dt)
+sol = solve(prob_sde_tomato_sys, SROCKC2(),dt = dt)
 ################################################################################
 ############################ PLot variables ####################################
 ################################################################################
